@@ -1,4 +1,4 @@
-#开始
+# 开始
 
 #一、Git 和 Github分别是什么？
 Git是一个运行在你电脑上的版本控制软件，而Github是基于Git这个版本控制软件打造的网址。
@@ -13,19 +13,134 @@ Git的三个概念：提交Commit、仓库Repository、分支Branch
 克隆仓库：git clone <git地址>
 初始化仓库：git init 
 
-添加文件到暂存区：git add -A
-把暂存区的文件提交到仓库：git commit -m "提交信息"
-查看提交的历史记录：git log --stat
+一、Git（指针的运用）
+Git 安装好后 可以通过windows右键菜单 打开gitbash 或者git图形管理界面
+（1）先要对本机用户进行一个签名 确认一个环境中的虚拟身份
+git config --global user.name xx
+git config --global user.email xx
 
-工作区回滚：git checkout <filename>
-撤销最后一次提交：git reset HEAD^1
+对需要仓库管理的文件夹进行 git init 初始化
 
-以当前分支为基础新建分支：git checkout -b <branchname>
-列举所有的分支：git branch
-单纯地切换到某个分支：git checkout <branchname>
-删掉特定的分支：git branch -D <branchname>
-合并分支：git merge <branchname>
+常用指令：
+git status 查看状况
+git add xx 增加到暂存区  git rm xx 从暂存取出
+git commit -m “提交的概述信息”xx  从暂存提交到本地库
+git reflog   git log 查看库版本信息
 
-推送当前分支最新的提交到远程：git push
-拉取远程分支最新的提交到本地：git pull
+git reset --hard 版本号（可通过 git reflog查看）版本穿梭
+
+（2）Git分支操作
+版本控制中 需要同时推进多个任务，为每个任务，创建一个独立的分支，提高开发效率，且互相独立，互不干扰
+
+git branch -v              查看当前分支
+git branch 分支名       建立一个新的分支
+git checkout 分支名  切换分支
+
+分支合并要先进入master 主干才可以继续
+git merge 分支名  合并分支到主干 要在master下！
+
+合并分支（有冲突的解决方法）
+产生冲突得到原因：合并时，在同一个文件的同一个位置存在两套完全不同的修改
+				git 无法决定选择哪个 需要人为选择
+				
+这时候 打开文件 会发现文件有一定得到 标注  选择好保留处 删除不要的部分以及标识
+再次提交   -暂缓-本地库（commit 本地库的时候 不能带文件名字 系统无法识别）
+要直接 git commit -m"xx" 提交 此时 主干合并了   但是切换回分支还是合并前状态
+
+I know you can see that!
+I Love you~
+Please quickly give me the answer!
+<<<<<<< HEAD
+I think hot-fox didn't love you!
+=======
+monster:Ofcourse I love you too!
+>>>>>>> hot-fox
+
+（3）Github 账号登录创建一个库
+git remote -v 查看别名映射
+git remote add 库别名 http/ssh地址
+
+1.推送
+git push 别名 分支名  推送到远程库 （最小的单位是分支，全推送需要分支推送）
+	git push 别名 master      git push 别名 hot-fox
+	
+2.拉取 (更新本地库 保持与远程同步)
+git pull git 别名 分支名 （此处与push 一致）
+
+3.克隆
+git clone 地址 
+（拉取代码、会自动初始化库、配置信息一致 如别名数据）
+
+4.加入团队
+库的掌握者 进入库-settings-Mange access（管理成员）-invite a collaborator
+（通过名称搜索用户）-pending invite（邀请函复制）-邀请函发给对象
+
+收到邀请函的用户 将邀请函链接复制到浏览器搜索栏（不是github搜索栏！ 并且要是github登录状态）-接受    
+
+这次受邀用户就可以成功 push代码项目了
+
+5.跨团队合作
+非团队用户 登录Github 获得链接或者目标用户名  定位到数据库
+用Fork 将该库放到自己的库管理 在线编辑
+也可以直接放入自己的本地库 本地编辑
+
+采用pull request - new pull request -create pull request 输入相关的改变信息 备注 
+
+库掌握者 在库内 可以看到pull requst 看到请求 还可以聊天 merge request 即可
+
+6.ssh免密登录
+ssh-keygen -t rsa （-C 标识名字 描述用 ） 生成ssh公钥私钥 采用rsa非对称加密 
+回车三下 就好了        之后会在home目录生成一个.ssh文件夹 里面有公钥和私钥
+
+将公钥复制到 账号的设置-ssh and gpg keys -new ssh key 中 就好了
+发现之前用http 现在可以用ssh了
+
+7.配置好忽略文件
+why？ 很多时候不管使用vs eclipse Idea  创建好项目都会有其特色的建议文件
+	   然而项目运行其实并不需要他们 放在远程库或者本地库 用Git管理就显得多余
+1）建议创建 xxx.ignore文件 推荐（git.ignore）放在家目录方便引用
+
+文件模板：
+
+# Compiled class file 
+*.class
+
+# Log file 
+*.log 
+
+# BlueJ files 
+*.ctxt 
+# Mobile Tools for Java (J2ME) 
+.mtj.tmp/ 
+
+# Package Files # 
+*.jar 
+*.war 
+*.nar 
+*.ear 
+*.zip 
+*.tar.gz 
+*.rar 
+
+# virtual machine crash logs, see 
+http://www.java.com/en/download/help/error_hotspot.xml 
+hs_err_pid* 
+
+.classpath 
+.project 
+.settings 
+target 
+.idea 
+*.iml 
+
+
+2）在.gitconfig 文件中引用忽略配置文件
+（此文件在 Windows 的家目录中 C:\Users\asus  和git.ignore最好放在一起呗） 
+[user] 
+	name = Layne 
+	email = Layne@atguigu.com 
+[core] 
+	excludesfile = C:/Users/asus/git.ignore  ！！引用创建的文件
+注意：这里要使用“正斜线（/）”，不要使用“反斜线（\）”
+
 
