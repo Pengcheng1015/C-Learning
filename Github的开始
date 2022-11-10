@@ -1,0 +1,11 @@
+#开始
+
+#一、Git 和 Github分别是什么？
+Git是一个运行在你电脑上的版本控制软件，而Github是基于Git这个版本控制软件打造的网址。
+Git的三个概念：提交Commit、仓库Repository、分支Branch
+
+#二、基本的查找资源的小技巧
+1.找百科大全 awesome xxx
+2.找例子 xxx sample
+3.找空项目的架子 xxx starter /xxx boilerplate
+4.找教程 xxx tutorial
